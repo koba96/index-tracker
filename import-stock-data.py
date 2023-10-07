@@ -1,9 +1,11 @@
 import yfinance as yf
 import pandas as pd
 import psycopg2
+import requests
 from datetime import date
 from itertools import repeat
 from sqlalchemy import create_engine
+from bs4 import BeautifulSoup
 
 indices = {
     "USA":[{"^GSPC":"USD"}, {"VB":"USD"}],
@@ -34,13 +36,66 @@ indices = {
 }
 
 ##################################################
+## Scrape data from website to get iso3codes #####
+##################################################
+
+url = 'https://www.iban.com/country-codes'
+page = requests.get(url)
+soup = BeautifulSoup(page.text, 'lxml')
+table1 = soup.find('table', id='myTable')
+count = 0
+cc_dict = {}
+codes = []
+
+for j in table1.find_all('td'):
+    if count==0:
+        curr_country = str(j).replace("<td>", "").replace("</td>", "")
+        codes = []
+    else:
+        codes.append(
+            str(j).replace("<td>", "").replace("</td>", "")
+        )
+    
+    count = count + 1
+    if count==4:
+        count = 0
+        cc_dict[curr_country] = codes
+    
+df_isocode = pd.DataFrame(
+    {
+        "Country":cc_dict.keys(),
+        "iso3code":[cc_dict[x][2] for x in cc_dict.keys()]
+    }
+)
+
+# df_isocode["Country"].iloc[230:250]
+
+
+# df_isocode.loc[230:250]
+# df_isocode[df_isocode["Country"].isin(["USA"])]
+
+curr_list = [
+    "United States of America (the)",
+    "United Kingdom of Great Britain and Northern Ireland (the)",
+    "Korea (the Republic of)"
+]
+
+rename_list = [
+    "USA", "United Kingdom", "South Korea"
+]
+for k in range(len(curr_list)):
+    df_isocode.loc[df_isocode['Country'] == curr_list[k],'Country'] = rename_list[k]
+
+
+
+##################################################
 ## Create a pandas dataframe with all the data. ##
 ##################################################
 
 today = date.today()
 
 df = pd.DataFrame(
-    {"Country":[], "Index":[], "Date":[], "Value":[], "Currency":[]}
+    {"Country":[], "index_name":[], "Date":[], "Value":[], "Currency":[]}
 )
 
 
@@ -59,7 +114,7 @@ for country in indices.keys():
             )[["Close"]]
             df_curr.reset_index(inplace=True)
             ## Index name
-            df_curr["Index"] = list(repeat(ind, df_curr.shape[0]))
+            df_curr["index_name"] = list(repeat(ind, df_curr.shape[0]))
             ## Add country
             df_curr["Country"] = list(repeat(country, df_curr.shape[0]))
             ## Time is not so interesting
@@ -74,9 +129,9 @@ for country in indices.keys():
                 )
             )
             df = pd.concat((df, df_curr))
-            
 
+df = pd.merge(df, df_isocode, on='Country', how='left')
 
 ## Connect to database
 engine = create_engine(f'postgresql://{"postgres"}:{"password"}@{"localhost"}:{5432}/{"country-db"}')
-df.to_sql('stock-index', engine, if_exists='replace')
+df.to_sql('stock_index', engine, if_exists='replace')
