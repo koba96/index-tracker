@@ -64,7 +64,7 @@ for j in table1.find_all('td'):
 df_isocode = pd.DataFrame(
     {
         "Country":cc_dict.keys(),
-        "iso3code":[cc_dict[x][1] for x in cc_dict.keys()]
+        "countryiso3code":[cc_dict[x][1] for x in cc_dict.keys()]
     }
 )
 
@@ -77,11 +77,14 @@ df_isocode = pd.DataFrame(
 curr_list = [
     "United States of America (the)",
     "United Kingdom of Great Britain and Northern Ireland (the)",
-    "Korea (the Republic of)"
+    "Korea (the Republic of)", 
+    "Philippines (the)",
+    "Netherlands (the)",
+    "Taiwan (Province of China)"
 ]
 
 rename_list = [
-    "USA", "United Kingdom", "South Korea"
+    "USA", "United Kingdom", "South Korea", "Philippines", "Netherlands", "Taiwan"
 ]
 for k in range(len(curr_list)):
     df_isocode.loc[df_isocode['Country'] == curr_list[k],'Country'] = rename_list[k]
