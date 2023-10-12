@@ -64,7 +64,7 @@ for j in table1.find_all('td'):
 df_isocode = pd.DataFrame(
     {
         "Country":cc_dict.keys(),
-        "iso3code":[cc_dict[x][2] for x in cc_dict.keys()]
+        "iso3code":[cc_dict[x][1] for x in cc_dict.keys()]
     }
 )
 
@@ -135,3 +135,4 @@ df = pd.merge(df, df_isocode, on='Country', how='left')
 ## Connect to database
 engine = create_engine(f'postgresql://{"postgres"}:{"password"}@{"localhost"}:{5432}/{"country-db"}')
 df.to_sql('stock_index', engine, if_exists='replace')
+engine.dispose()
