@@ -1,7 +1,7 @@
 from shiny import ui, render, App, Inputs, Outputs, Session, module, reactive, render, req, ui
-from modules import select_country_ui, plots_bycountry_ui
+from modules import select_country_ui, plots_index_ui
 import pandas as pd
-import matplotlib as plt
+import matplotlib.pyplot as plt
     
 
 app_ui = ui.page_fluid(
@@ -19,8 +19,9 @@ app_ui = ui.page_fluid(
         #     ui.output_ui("index_plots")
         # )
         ui.panel_main(
-            ui.output_text(id = "checking"),
-            plots_bycountry_ui("selectcountry1")            
+            # ui.output_text(id = "checking")
+            # ,
+            plots_index_ui("selectcountry1")            
         )
     )    
 )

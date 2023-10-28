@@ -36,6 +36,7 @@ engine.dispose()
 predictedGDP = 0
 df.drop(columns="index", inplace=True)
 df.rename(columns={"index_name":"Index"}, inplace=True)
+df.loc[:,"Index"] = df.Index.str.replace("^", "")
 
 ## Run the scripts contaiing ui and server
 
@@ -98,33 +99,42 @@ exec(open("server.py").read())
 app = App(app_ui, server)
 
 
+# def generate_plots_indices(country, index):
+#     ## subset dataframe and 
+#     dfCurr = df[(df['Country'] == country) & (df['Index'] == index)]
+#     dfCurr.loc[:,'Date'] = pd.to_datetime(dfCurr.loc[:,'Date'])
+#     dfCurr = dfCurr.sort_values(by = ['Date'])
+#     fig, axs = plt.subplots(1,3)
+#     axs[0].plot(dfCurr['Date'], dfCurr['Value'])
+#     axs[0].title.set_text(index)
+#     axs[1].plot(dfCurr['Date'], dfCurr['GDP_lcu'])
+#     axs[1].title.set_text("GDP (local currency)")
+#     axs[2].plot(dfCurr['Date'], dfCurr['index_gdp'])
+#     axs[2].plot(
+#         dfCurr['Date'], dfCurr['index_gdp_predict'],
+#         color = "red",
+#         linestyle = "--"
+#     )
+#     axs[2].title.set_text(index + "/GDP")
+#     return fig
 
 
-def generate_plots_indices(country, index):
-    ## subset dataframe and 
-    dfCurr = df[(df['Country'] == country) & (df['Index'] == index)]
-    dfCurr.loc[:,'Date'] = pd.to_datetime(dfCurr.loc[:,'Date'])
-    dfCurr = dfCurr.sort_values(by = ['Date'])
+# dfAus = df[(df['Country'] == "Australia") & (df['Index'] == "^AXJO")]
+# dfAus.loc[:,'Date'] = pd.to_datetime(dfAus.loc[:,'Date'])
+# dfAus = dfAus.sort_values(by = ['Date'])
+# dfAus['indexbygdp'] = dfAus['Value']/dfAus['GDP_lcu']
+
+# dfAus['UniqueYear'] = pd.to_datetime(df['Date']).dt.strftime('%Y')
+# dfAusGDP = dfAus.groupby(['UniqueYear', "GDP_lcu"]).size().reset_index().rename(columns={0:'count'})
 
 
+# X = dfAus[dfAus['indexbygdp'].notna()]['Date'].apply(lambda x:x.toordinal()).to_numpy()
+# y = dfAus[dfAus['indexbygdp'].notna()]['indexbygdp'].to_numpy()
+# reg = LinearRegression().fit(X.reshape((-1,1)),y)
+# X.shape
+# y.shape
 
-dfAus = df[(df['Country'] == "Australia") & (df['Index'] == "^AXJO")]
-dfAus.loc[:,'Date'] = pd.to_datetime(dfAus.loc[:,'Date'])
-dfAus = dfAus.sort_values(by = ['Date'])
-dfAus['indexbygdp'] = dfAus['Value']/dfAus['GDP_lcu']
+# fig, axs = plt.subplots(1,2)
+# axs[0].plot(dfAus['Date'], dfAus['Value'])
+# axs[1].plot(pd.to_datetime(dfAus['Date']), dfAus['GDP_lcu'])
 
-dfAus['UniqueYear'] = pd.to_datetime(df['Date']).dt.strftime('%Y')
-dfAusGDP = dfAus.groupby(['UniqueYear', "GDP_lcu"]).size().reset_index().rename(columns={0:'count'})
-
-
-X = dfAus[dfAus['indexbygdp'].notna()]['Date'].apply(lambda x:x.toordinal()).to_numpy()
-y = dfAus[dfAus['indexbygdp'].notna()]['indexbygdp'].to_numpy()
-reg = LinearRegression().fit(X.reshape((-1,1)),y)
-X.shape
-y.shape
-
-fig, axs = plt.subplots(1,2)
-axs[0].plot(dfAus['Date'], dfAus['Value'])
-axs[1].plot(pd.to_datetime(dfAus['Date']), dfAus['GDP_lcu'])
-
-fig.show()

@@ -68,7 +68,7 @@ else:
     )
 
 
-df_gdp.loc[:,"date"] = pd.to_datetime(df_gdp.loc[:,"date"]).dt.date
+df_gdp.loc[:,"date"] = pd.to_datetime(df_gdp.loc[:,"date"], format="%Y").dt.date
 
 ## send to database
 engine = create_engine(f'postgresql://{"postgres"}:{"password"}@{"localhost"}:{5432}/{"country-db"}')

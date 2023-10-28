@@ -1,6 +1,6 @@
 from shiny import ui, render, App, Inputs, Outputs, Session, module, reactive, render, req, ui
-from modules import available_indices_server
-import matplotlib as plt
+from modules import available_indices_server, send_index_plots_ui, generate_plots_indices
+import matplotlib.pyplot as plt
 import pandas as pd
 
 
@@ -31,7 +31,17 @@ import pandas as pd
 
 
 def server(input:Inputs, output:Outputs, session:Session):
+    ## Call module for getting the indices for the given country
     indices = available_indices_server("selectcountry1", df = df)
+
+
+    ## Call module for generating ui.output_plot elements corresponding 
+    ## to plots_index_ui
+    # generate_ui_iteratively("selectcountry1", df=df, indices=indices)
+    
+    ## This module generates render plot for each index
+    send_index_plots_ui("selectcountry1", df=df)
+
     # @reactive.Calc
     # def get_indices():
     #     indices = pd.unique(df[df['Country'] == whichcountry()]['Index']).tolist()
@@ -45,6 +55,19 @@ def server(input:Inputs, output:Outputs, session:Session):
         for i in allIndices:
             str = str + i
         return str
+    
+    # @output
+    # @render.plot
+    # def index_plots():
+    #     uiList = list()
+    #     allIndices = indices()
+    #     for i in allIndices:
+    #         fig = generate_plots_indices(df=df, country = input.selectCountry(), index = i)
+    #         uiList.append(
+    #             fig
+    #         )
+    #     return uiList
+    
     ##################################################
     ## Adds output plots elements to ui iteratively ##
     ##################################################
