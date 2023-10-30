@@ -109,6 +109,7 @@ for country in indices.keys():
     print(country)
     for j in range(len(indices[country])): 
         for ind in indices[country][j].keys():
+            print(ind)
             current_fund = yf.Ticker(ind)
             df_curr = current_fund.history(
                 start = "1970-01-01", 
@@ -135,8 +136,9 @@ for country in indices.keys():
 
 df = pd.merge(df, df_isocode, on='Country', how='left')
 
-
 ## Connect to database
 engine = create_engine(f'postgresql://{"postgres"}:{"password"}@{"localhost"}:{5432}/{"country-db"}')
 df.to_sql('stock_index', engine, if_exists='replace')
 engine.dispose()
+
+
