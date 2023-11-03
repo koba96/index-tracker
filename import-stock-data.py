@@ -136,9 +136,8 @@ for country in indices.keys():
 
 df = pd.merge(df, df_isocode, on='Country', how='left')
 
+
 ## Connect to database
 engine = create_engine(f'postgresql://{"postgres"}:{"password"}@{"localhost"}:{5432}/{"country-db"}')
 df.to_sql('stock_index', engine, if_exists='replace')
 engine.dispose()
-
-

@@ -1,6 +1,7 @@
 import requests
 import json
 import pandas as pd
+from datetime import date
 import psycopg2
 from sqlalchemy import create_engine
 
