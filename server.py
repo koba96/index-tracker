@@ -1,7 +1,7 @@
 from shiny import ui, render, App, Inputs, Outputs, Session, module, reactive, render, req, ui
 from modules import available_indices_server, send_index_plots_ui, generate_plots_indices
 import matplotlib.pyplot as plt
-import pandas as pd
+import pandas as pd  
 
 
 ## Generate graph module
