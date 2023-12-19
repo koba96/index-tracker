@@ -90,11 +90,11 @@ dbConn.close()
 
 sql_gdp = (
     "SELECT countryiso3code, date_part(\'year\', max_date) "
-    "From ( "
-        "SELECT countryiso3code, max(date) as max_date "
+    "FROM ( "
+        "SELECT DISTINCT countryiso3code, max(date) as max_date "
         "FROM gdp "
         "GROUP BY countryiso3code "
-    ")"
+    ") a"
 )
 
 engine = create_engine(f'postgresql://{"postgres"}:{"password"}@{"localhost"}:{5432}/{"country-db"}')
