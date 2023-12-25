@@ -30,7 +30,7 @@ sql_index = (
     "GROUP BY \"Country\", index_name, \"Currency\", \"countryiso3code\" "
 )
 
-engine = create_engine(f'postgresql://{"postgres"}:{"password"}@{"localhost"}:{5432}/{"country-db"}')
+engine = create_engine(f'postgresql://{user}:{password}@{host}:{5432}/{db}')
 dbConn = engine.connect()
 df_index_max = pd.read_sql(sql_index, dbConn)
 dbConn.close()
