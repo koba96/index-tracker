@@ -20,6 +20,7 @@ exec(open("update_db.py").read())
 #############################
 ## Get data from database. ##
 #############################
+exec(open("db_information.py").read())
 
 ## The query we want to run
 sqlQuery = (
@@ -34,7 +35,7 @@ sqlQuery = (
 )
 
 ## Open connection to database.
-engine = create_engine(f'postgresql://{"postgres"}:{"password"}@{"localhost"}:{5432}/{"country-db"}')
+engine = create_engine(f'postgresql://{user}:{password}@{host}:{5432}/{db}')
 dbConn = engine.connect()
 df = pd.read_sql(sqlQuery, dbConn)
 dbConn.close()

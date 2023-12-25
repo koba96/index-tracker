@@ -7,6 +7,10 @@ from itertools import repeat
 from sqlalchemy import create_engine
 from bs4 import BeautifulSoup
 
+## Information for connecting to database
+exec(open("db_information.py").read())
+
+
 indices = {
     "USA":[{"^GSPC":"USD"}, {"VB":"USD"}],
     "Germany":[{"^GDAXI":"EUR"}, {"^SDAXI":"EUR"}],
@@ -138,6 +142,6 @@ df = pd.merge(df, df_isocode, on='Country', how='left')
 
 
 ## Connect to database
-engine = create_engine(f'postgresql://{"postgres"}:{"password"}@{"localhost"}:{5432}/{"country-db"}')
+engine = create_engine(f'postgresql://{user}:{password}@{host}:{5432}/{db}')
 df.to_sql('stock_index', engine, if_exists='replace')
 engine.dispose()

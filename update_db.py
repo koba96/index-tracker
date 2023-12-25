@@ -9,6 +9,10 @@ from sqlalchemy import create_engine
 from bs4 import BeautifulSoup
 from datetime import date
 
+## Information for connecting to database
+exec(open("db_information.py").read())
+
+
 ########################################################################
 ## This script is called in app.py and the purpose is to update ########
 ## the data tables gdp and stock_index in the 'country-db' database.  ##

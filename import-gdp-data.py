@@ -5,6 +5,14 @@ from datetime import date
 import psycopg2
 from sqlalchemy import create_engine
 
+## Information for connecting to database
+
+user = 'postgres'
+password = "password"
+host = 'localhost'
+port = 5432
+db = "country-db"
+
 ###############################
 ## Start by getting GDP data ##
 ###############################
