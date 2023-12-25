@@ -14,7 +14,7 @@ from sklearn.linear_model import LinearRegression
 ## Check if there is new data
 ## and update databases
 #############################
-
+predictedGDP = 0
 exec(open("update_db.py").read())
 
 #############################
@@ -104,4 +104,3 @@ exec(open("ui.py").read())
 exec(open("server.py").read())
 
 app = App(app_ui, server)
-
