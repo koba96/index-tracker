@@ -6,12 +6,8 @@ import psycopg2
 from sqlalchemy import create_engine
 
 ## Information for connecting to database
+exec(open("db_information.py").read())
 
-user = 'postgres'
-password = "password"
-host = 'localhost'
-port = 5432
-db = "country-db"
 
 ###############################
 ## Start by getting GDP data ##
@@ -81,6 +77,6 @@ else:
 df_gdp.loc[:,"date"] = pd.to_datetime(df_gdp.loc[:,"date"], format="%Y").dt.date
 
 ## send to database
-engine = create_engine(f'postgresql://{"postgres"}:{"password"}@{"localhost"}:{5432}/{"country-db"}')
+engine = create_engine(f'postgresql://{user}:{password}@{host}:{5432}/{db}')
 df_gdp.to_sql('gdp', engine, if_exists='replace')
 engine.dispose()
